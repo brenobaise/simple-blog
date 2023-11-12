@@ -27,26 +27,22 @@ app.listen(port, () => {
 
 app.get('/', (req,res) =>{
     // HomePage
-    res.render('index.ejs');
+    res.render('index', {title: 'Home'});
 });
 
 app.get('/blogs', async (req, res) =>{
     // view all existing blog entries
     const blogs = await getAllBlogs();
-    res.render('blogs.ejs', {blogs : blogs});
+    res.render('blogs', { blogs: blogs, title: 'All Blogs' });
+
 });
+
 app.get('/blogs/:id', async (req, res) => {
     const id = req.params.id;
     const blog = await getBlogById(id);
     res.send(blog);
 });
 
-app.post('/blogs/create', async (req, res) =>{
-    // Create a new blog entry
-    const { title, contents } = req.body;
-    const newBlogEntry = await createBlog(title, contents);
-    res.status(201).send();
-});
 
 app.get('/about', (req, res) => {
     // About Page

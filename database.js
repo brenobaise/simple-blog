@@ -30,24 +30,29 @@ export async function getBlogById(blogId){
     }
 }
 
-export async function createBlog(title, contents){
-    try{
-        const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ? OR contents = ?",
-        [title, contents]);
+export async function createBlog(title, contents) {
+    try {
+        // Check if a blog with the same title already exists
+        const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ?", [title]);
 
-        if( existingBlog[0].length > 0){
+        if (existingBlog[0].length > 0) {
             console.log("User was not able to create a blog, an existing blog was found");
             return -1;
         }
 
-        // if a blog already doesnt exist
-        const blog = await pool.query("INSERT INTO blogs (title, contents) VALUES (?, ?)",
-         [title, contents]);
+        // If a blog doesn't already exist, insert the new blog
+        const result = await pool.query("INSERT INTO blogs (title, contents) VALUES (?, ?)", [title, contents]);
 
-    }catch (err){
+        // Get the newly created blog by its ID
+        const newBlog = await getBlogById(result.insertId);
+
+        return newBlog;
+    } catch (err) {
         console.error('Error at createBlog: ', err);
+        return -1; 
     }
 }
+
 
 export async function deleteBlog(blogId){
     try{

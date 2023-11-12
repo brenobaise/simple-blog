@@ -3,7 +3,7 @@ A simple blog built with Express and MongoDB, with the aims of practicing to CRU
 
 
 ### TODO List - Work In Progress
- - Add nav & footer:  ejs templates
+ - Add nav & footer : [x] Done
  - Add About Me page
  - Add blog pages
  - Delete blog pages

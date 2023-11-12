@@ -22,5 +22,18 @@ app.listen(port, () => {
 });
 
 app.get('/', (req,res) =>{
+    // HomePage
     res.render('index');
+});
+
+app.get('/blogs', (req, res) =>{
+    // view all existing blog entries
+});
+
+app.get('/blogs/create', (req, res) =>{
+    // Create a new blog entry
+});
+
+app.get('/about', (req, res) => {
+    // About Page
 });

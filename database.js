@@ -9,8 +9,9 @@ const pool= mysql.createPool({
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
 }).promise();
-console.log(process.env.HOST, process.env.USER, process.env.PASSWORD, process.env.DATABASE);
 
+
+//  CRUD OPERATIONS
 export async function getAllBlogs(){
     try {
         const blogs = await pool.query("SELECT * FROM blogs");
@@ -19,6 +20,7 @@ export async function getAllBlogs(){
         console.error('Error connecting to the database:', err);
     }   
 }
+
 export async function getBlogById(){
     try{
         const blog = await pool.query("SELECT * FROM blogs WHERE id = ?", [id]);
@@ -27,6 +29,7 @@ export async function getBlogById(){
         console.error('Error at getBlogById:', err);
     }
 }
+
 export async function createBlog(title, contents){
     try{
         const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ? OR contents = ?",
@@ -59,6 +62,7 @@ export async function deleteBlog(blogId){
 
 }
 
+// CRUD Utility Functions
 async function searchById(blogId){
     try{
         const foundBlog = await pool.query("SELECT id FROM blogs WHERE id = ?", 

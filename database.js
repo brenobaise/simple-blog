@@ -21,9 +21,9 @@ export async function getAllBlogs(){
     }   
 }
 
-export async function getBlogById(){
+export async function getBlogById(blogId){
     try{
-        const blog = await pool.query("SELECT * FROM blogs WHERE id = ?", [id]);
+        const blog = await pool.query("SELECT * FROM blogs WHERE id = ?", [blogId]);
         return blog[0];
     }catch(err){
         console.error('Error at getBlogById:', err);

@@ -1,8 +1,9 @@
 .leftcolumn {
-    float:none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
     width: 100%;
-    padding-left: 200px;
-    padding-right: 200px;
   }
   
   /* Fake image */
@@ -15,6 +16,7 @@
   /* Add a card effect for articles */
   .card {
     background-color: white;
+    width: 400px;
     padding: 20px;
     margin-top: 20px;
     margin-bottom: 20px;

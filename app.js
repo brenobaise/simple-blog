@@ -32,26 +32,37 @@ app.get('/', async (req,res) =>{
 });
 
 app.get('/blogs', async (req, res) =>{
-    // view all existing blog entries
+    // View all existing blog entries
     const blogs = await getAllBlogs();
     res.render('blogs', { blogs: blogs, title: 'All Blogs' });
 
 });
 
 app.get('/blogs/:id', async (req, res) => {
+    // View a specific blog
     const id = req.params.id;
     const blog = await getBlogById(id);
     res.send(blog);
 });
 
 app.get('/createBlog', async (req, res) => {
+    // New blog page
     res.render('create', {title: "Create a new Entry"});
 })
 
 app.post('/blogs', async (req, res) => {
+    // Commit a created blog to the database
     const data = req.body;
-    await createBlog(data);
-    res.redirect('/blogs');
+
+    // Check if creating the blog was successful
+    const newBlogId = await createBlog(data);
+    if (newBlogId !== -1) {
+        // Redirect to the newly created blog
+        res.redirect(`/blogs/${newBlogId}`);
+    } else {
+        // Render the create page again with an error message
+        res.render('create', { title: "Create a new Entry"});
+    }
 });
 
 app.get('/about', async (req, res) => {

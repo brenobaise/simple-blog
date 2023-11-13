@@ -21,64 +21,96 @@ export async function getAllBlogs(){
     }   
 }
 
-export async function getBlogById(blogId){
-    try{
-        const blog = await pool.query("SELECT * FROM blogs WHERE id = ?", [blogId]);
-        return blog[0];
-    }catch(err){
+export async function getBlogById(blogId) {
+    try {
+        const blogExists = await searchById(blogId);
+
+        if (blogExists) {
+            // If the blog with the given ID exists, retrieve and return the blog object
+            const blog = await pool.query("SELECT * FROM blogs WHERE id = ?", [blogId]);
+            return blog[0][0];
+        } else {
+            // If the blog with the given ID doesn't exist, return null or any appropriate indication
+            console.error("Error: Blog with ID not found");
+            return null ;
+        }
+    } catch (err) {
         console.error('Error at getBlogById:', err);
+        throw err;
     }
 }
 
-export async function createBlog(data) {
-    const title = data.title;
-    const contents = data.body;
+export async function createBlog({ title, contents }) {
     try {
-        // Check if a blog with the same title already exists
-        const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ?", [title]);
+        // Check if a blog with the same title and contents already exists
+        const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ? AND contents = ?", [title, contents]);
 
-        if (existingBlog[0].length > 0) {
+        if (existingBlog && existingBlog[0].length > 0) {
             console.log("User was not able to create a blog, an existing blog was found");
-            return -1;
+            return -1; // Return -1 to indicate that the blog creation was unsuccessful
         }
 
-        // If a blog doesn't already exist, insert the new blog
+        // If a blog doesn't already exist with the same title and contents, insert the new blog
         const result = await pool.query("INSERT INTO blogs (title, contents) VALUES (?, ?)", [title, contents]);
 
-        // Get the newly created blog by its ID
-        const newBlog = await getBlogById(result.insertId);
-
-        return newBlog;
+        // Return the ID of the newly created blog
+        return result.insertId;
     } catch (err) {
         console.error('Error at createBlog: ', err);
-        return -1; 
+        return -1; // Return -1 to indicate that the blog creation was unsuccessful
     }
 }
 
 
-export async function deleteBlog(blogId){
-    try{
-        if(!(searchById(blogId))){
-            return -1;
-        }
-        await pool.query("DELETE FROM blogs WHERE id = ?", [blogId]);
-    }catch (err){
-        console.error("Error at deleteBlog: ", err);
-        console.log("delete")
-    }
+export async function deleteBlog(blogId) {
+    try {
+        const blogToDelete = await searchById(blogId);
 
+        if (!blogToDelete) {
+            // If the blog with the given ID doesn't exist, return false
+            return false;
+        }
+
+        // If the blog exists, delete it
+        await pool.query("DELETE FROM blogs WHERE id = ?", [blogId]);
+
+        // Return true to indicate successful deletion
+        return true;
+    } catch (err) {
+        console.error("Error at deleteBlog: ", err);
+        // Return false in case of an error
+        return false;
+    }
 }
 
 // CRUD Utility Functions
-async function searchById(blogId){
-    try{
-        const foundBlog = await pool.query("SELECT id FROM blogs WHERE id = ?", 
-        [blogId]);
-        if(foundBlog)
-        return foundBlog[0][0].id;
-    }catch(err){
-        console.error("Error 404 : ID not found");
-        return -1;
+export async function searchById(blogId) {
+    try {
+        const foundBlog = await pool.query("SELECT * FROM blogs WHERE id = ?", [blogId]);
+
+        if (foundBlog && foundBlog[0].length > 0) {
+            // Return true if the blog with the given ID is found
+            return true;
+        } else {
+            // Return false if the blog with the given ID doesn't exist
+            return false;
+        }
+    } catch (err) {
+        console.error("Error searching for blog by ID:", err);
+        // Return false in case of an error
+        return false;
     }
-    
+}
+
+
+
+// Dev methods
+async function devFlushDatabase(){
+    pool.query("DELETE FROM blogs");
+    console.log("flushed")
+}
+
+async function devGetBlogs(){
+    const data =  await getAllBlogs();
+    console.log(data);
 }

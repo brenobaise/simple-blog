@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 // tells express where the static pages are
 app.use(express.static('public'));
 app.use(express.json());
+app.use(express.urlencoded({extended : true}));
 
 
 // Server port
@@ -25,7 +26,7 @@ app.listen(port, () => {
     console.log(`Server is listening on http://localhost:${port}`);
 });
 
-app.get('/', (req,res) =>{
+app.get('/', async (req,res) =>{
     // HomePage
     res.render('index', {title: 'Home'});
 });
@@ -43,7 +44,16 @@ app.get('/blogs/:id', async (req, res) => {
     res.send(blog);
 });
 
+app.get('/createBlog', async (req, res) => {
+    res.render('create', {title: "Create a new Entry"});
+})
 
-app.get('/about', (req, res) => {
+app.post('/blogs', async (req, res) => {
+    const data = req.body;
+    await createBlog(data);
+    res.redirect('/blogs');
+});
+
+app.get('/about', async (req, res) => {
     // About Page
 });

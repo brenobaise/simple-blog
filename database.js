@@ -30,7 +30,9 @@ export async function getBlogById(blogId){
     }
 }
 
-export async function createBlog(title, contents) {
+export async function createBlog(data) {
+    const title = data.title;
+    const contents = data.body;
     try {
         // Check if a blog with the same title already exists
         const existingBlog = await pool.query("SELECT * FROM blogs WHERE title = ?", [title]);

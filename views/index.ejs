@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head.ejs') %>
+    <link rel="stylesheet" href="/projectcard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<body>
+    <div class="project-container">
+        <%- include('./partials/nav.ejs') %>
+        <div class="project-card">
+            <h1>A Simple Blog</h1>
+            <p class="title"><i>Developed by: Breno Baise</i></p>
+            <br>
+            <p>Not your usual blog website design.</p>
+            <p>In taking on this project, my goal was to dive into the world of web development and explore the most popular technologies and frameworks.</p>
+            <br>
+            <ul>
+                <p>Main functionalities</p>
+                <li>Create blog entries</li>
+                <li>View all blog entries</li>
+                <li>View an specific blog</li>
+                <li>Delete blogs</li>
+            </ul>
+        </div>
+        <%- include('./partials/footer.ejs') %>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+nav {
+    width: 100%;
+    padding: 20px 15%;
+    background-color: #333;
+    color: #efefef;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h3 {
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #efefef;
+    background-color: #333; /* Set the initial background color */
+    padding: 10px 20px;
+    transition: background-color 0.3s ease; /* Apply transition to the background-color property over 0.3 seconds with ease timing function */
+}
+
+.nav-links a:hover {
+    background-color: #555; /* Darken the background color on hover */
+}
